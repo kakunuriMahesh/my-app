@@ -1,10 +1,14 @@
 import React, { createContext, useEffect, useState } from "react";
-
+import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 export const usersContext = createContext();
 
 export const UsersContextProvider = ({ children }) => {
   const [items, setItems] = useState([]);
   const [filteredItems, setFilteredItems] = useState([]);
+  const [form, setForm] = useState(false);
+
+
 
   useEffect(() => {
     fetch("http://localhost:5000")
@@ -23,6 +27,10 @@ export const UsersContextProvider = ({ children }) => {
       });
   }, []);
 
+  const formControl = ()=>{
+    setForm(!form)
+  }
+
   // add
   const addItems = (newItem) => {
     console.log(newItem);
@@ -32,36 +40,35 @@ export const UsersContextProvider = ({ children }) => {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
-        Authorization:
-          "Bearer b6c0e957c5b2abcbde45bc63d0437652420486b559c6a5abdec17006cd9e7f84",
+        // Authorization:
+        //   "Bearer b6c0e957c5b2abcbde45bc63d0437652420486b559c6a5abdec17006cd9e7f84",
       },
 
       body: JSON.stringify(newItem),
     })
       .then((response) => {
-        if(response.ok){
-            console.log("response ok")
-            return response.json()
-        }else{
-            console.log(response);
-            
+        if (response.ok) {
+          console.log("response ok");
+          toast.success("Your Loged In ✅");
+          return response.json();
+        } else {
+          console.log(response);
         }
-    })
+      })
       .then((data) => {
-        console.log(data)
-        const updatedItems = [...items, {...data}];
+        console.log([...data]);
+
+        const updatedItems = [...items, { ...data }];
         setItems(updatedItems);
         setFilteredItems(updatedItems);
       })
-      .catch((error)=>{
-        console.log(error)
-      })
+      .catch((error) => {
+        console.log(error);
+      });
 
     // .then((response)=>response.json())
     // .then((data))
   };
-
-  
 
   // delete
   const deleteItem = (id) => {
@@ -98,6 +105,8 @@ export const UsersContextProvider = ({ children }) => {
       value={{
         items,
         filteredItems,
+        form,
+        formControl,
         filterItems,
         addItems,
         deleteItem,
