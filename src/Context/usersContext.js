@@ -8,6 +8,7 @@ export const UsersContextProvider = ({ children }) => {
   const [filteredItems, setFilteredItems] = useState([]);
   const [manualFilter, setManualFilter] = useState([]);
   const [form, setForm] = useState(false);
+  const [info, setInfo] = useState("");
 
   useEffect(() => {
     fetch("http://localhost:5000")
@@ -101,8 +102,16 @@ export const UsersContextProvider = ({ children }) => {
     const filtered = items.filter((eachItem) =>
       eachItem.name.toLowerCase().includes(lowerCaseInput)
     );
-    setFilteredItems(filtered);
+    
+    if (filtered.length > 0) {
+      setFilteredItems(filtered);
+      setInfo("");  
+    } else {
+      setFilteredItems([]);  
+      setInfo("User Not Found");
+    }
   };
+  
 
   const appliedFilter = (filters) => {
     const filtered = items.filter((item) => {
@@ -130,6 +139,7 @@ export const UsersContextProvider = ({ children }) => {
         filteredItems,
         manualFilter,
         form,
+        info,
         formControl,
         filterItems,
         appliedFilter,

@@ -12,6 +12,7 @@ const BackDashBoard = () => {
     filterItems,
     manualFilter,
     form,
+    info,
     formControl,
     addItems,
     deleteItem,
@@ -160,7 +161,7 @@ const BackDashBoard = () => {
         />
       ) : (
         <div className="h-[80vh] flex items-center justify-center">
-          <p>Loading...</p>
+          <p>{info!==""?info:"Loading..."}</p>
         </div>
       )}
     </div>

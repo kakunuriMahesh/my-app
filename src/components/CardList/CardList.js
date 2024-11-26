@@ -22,6 +22,13 @@ const CardList = ({ items, manualItems, onDelete, openForm }) => {
   const [hoveredInfo, setHoveredInfo] = useState(null); // Track the hovered info (name or email)
   const itemsData = items.reverse();
 
+
+  function capitalizeFirstLetter(string) {
+    if (string && typeof string === "string") {
+      return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
+    }
+    return string;
+  }
   return (
     <div className="flex flex-col items-center">
       <div className="flex w-[100%] px-[45px]">
@@ -75,9 +82,9 @@ const CardList = ({ items, manualItems, onDelete, openForm }) => {
                   view ? "" : "flex items-center"
                 }`}
               >
-                <div className={`${view ? "" : "flex items-center"}`}>
+                <div className={`${view ? "" : "flex items-center w-[100vw]"}`}>
                   <h1
-                    className={`flex items-center ${view ? "" : "w-fit mr-5"}`}
+                    className={`flex items-center ${view ? "" : "w-[20%] mr-5 "}`}
                   >
                     {eachItem.gender === "male" ? (
                       <MdOutlinePerson className="mr-1" />
@@ -89,7 +96,7 @@ const CardList = ({ items, manualItems, onDelete, openForm }) => {
                     <span className="flex items-center">
                       {view && eachItem.name.length >= 20 ? (
                         <>
-                          {eachItem.name.slice(0, 20)}
+                          {capitalizeFirstLetter(eachItem.name.slice(0, 20))}
                           {"..."}
                           <IoIosInformationCircleOutline
                             className={`ml-1 ${view ? "" : "hidden"}`}
@@ -103,7 +110,7 @@ const CardList = ({ items, manualItems, onDelete, openForm }) => {
                           />
                         </>
                       ) : (
-                        eachItem.name
+                        capitalizeFirstLetter(eachItem.name)
                       )}
                     </span>
 
@@ -112,7 +119,7 @@ const CardList = ({ items, manualItems, onDelete, openForm }) => {
                       hoveredInfo?.value === eachItem.name && (
                         <div>
                           <div className="absolute h-fit w-fit p-3 -top-2 right-5 bottom-[30px] bg-black text-white px-2 py-1 rounded-md text-sm z-30 text-nowrap tooltip-name">
-                            {eachItem.name}
+                            {capitalizeFirstLetter(eachItem.name)}
                           </div>
                           <div class=" rotate-180 absolute top-[15px] right-[100px] w-0 h-0 border-l-[10px] border-r-[10px] border-t-[10px] border-t-transparent border-l-transparent border-r-transparent border-b-[10px] border-b-black"></div>
                         </div>
@@ -122,7 +129,7 @@ const CardList = ({ items, manualItems, onDelete, openForm }) => {
                   {/* Hover effect for email */}
                   <div
                     className={`flex items-center ${
-                      view ? "" : "w-fit hidden md:flex"
+                      view ? "" : "w-[30%] hidden md:flex"
                     }`}
                   >
                     <MdOutlineMailOutline className="mr-1" />
@@ -140,7 +147,7 @@ const CardList = ({ items, manualItems, onDelete, openForm }) => {
 
                         return (
                           <div className="flex items-center mr-5">
-                            <span>{firstPart + "@" + secPart}</span>
+                            <span>{capitalizeFirstLetter(firstPart) + "@" + secPart}</span>
 
                             {/* Conditionally render the icon only if email is long enough */}
                             {email[0].length >= 10 && email[1].length > 9 && (
@@ -165,7 +172,7 @@ const CardList = ({ items, manualItems, onDelete, openForm }) => {
                       hoveredInfo?.value === eachItem.email && (
                         <div>
                           <div className="absolute h-fit w-fit p-3 top-[12px] right-1 bottom-[5px] bg-black text-white px-2 py-1 rounded-md text-sm z-30 text-nowrap tooltip-email">
-                            {eachItem.email}
+                            {capitalizeFirstLetter(eachItem.email)}
                           </div>
                           <div class=" rotate-180 absolute top-[35px] right-[100px] w-0 h-0 border-l-[10px] border-r-[10px] border-t-[10px] border-t-transparent border-l-transparent border-r-transparent border-b-[10px] border-b-black"></div>
                         </div>
@@ -173,7 +180,7 @@ const CardList = ({ items, manualItems, onDelete, openForm }) => {
                   </div>
 
                   <p
-                    className={`flex items-center ${view ? "" : "w-fit mr-5"}`}
+                    className={`flex items-center ${view ? "" : "w-[20%] ml-auto mr-5"}`}
                   >
                     <span>
                       {eachItem.gender === "male" ? (
@@ -182,17 +189,17 @@ const CardList = ({ items, manualItems, onDelete, openForm }) => {
                         <CgGenderFemale className="mr-1" />
                       )}{" "}
                     </span>
-                    {eachItem.gender}
+                    {capitalizeFirstLetter(eachItem.gender)}
                   </p>
                   <p
-                    className={`flex items-center ${view ? "" : "w-fit mr-5"}`}
+                    className={`flex items-center ${view ? "" : "w-[20%] mr-5"}`}
                   >
                     {eachItem.name === "inactive" ? (
                       <HiOutlineExclamationCircle className="mr-1" />
                     ) : (
                       <HiOutlineCheckCircle className="mr-1" />
                     )}{" "}
-                    {eachItem.status}
+                    {capitalizeFirstLetter(eachItem.status)}
                   </p>
                 </div>
 
