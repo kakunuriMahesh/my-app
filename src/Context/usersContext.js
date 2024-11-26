@@ -104,16 +104,23 @@ export const UsersContextProvider = ({ children }) => {
     setFilteredItems(filtered);
   };
 
-  const appliedFilter = (initialFilters) => {
-    console.log(initialFilters);
-    const appliedFilterData = items.filter((each) =>
-      Object.keys(initialFilters).every(
-        (key) => each[key] === initialFilters[key]
-      )
-    );
-    console.log(appliedFilterData);
-    setManualFilter(appliedFilterData);
-    setFilteredItems(appliedFilterData);
+  const appliedFilter = (filters) => {
+    const filtered = items.filter((item) => {
+      const genderFilter =
+        filters.gender && filters.gender !== "All"
+          ? item.gender === filters.gender
+          : true;
+
+      const statusFilter =
+        filters.status && filters.status !== "All"
+          ? item.status === filters.status
+          : true;
+
+      return genderFilter && statusFilter;
+    });
+
+    setManualFilter(filtered);
+    setFilteredItems(filtered);
   };
 
   return (
