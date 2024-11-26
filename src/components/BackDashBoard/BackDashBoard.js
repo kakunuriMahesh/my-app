@@ -3,18 +3,20 @@ import React, { useContext, useState } from "react";
 import { ToastContainer } from "react-toastify";
 import CardList from "../CardList/CardList";
 import { usersContext } from "../../Context/usersContext";
-import { ImCross } from "react-icons/im";
+import { RxCross2 } from "react-icons/rx";
 import { FaSearch } from "react-icons/fa";
 
 const BackDashBoard = () => {
   const {
     filteredItems,
     filterItems,
+    manualFilter,
     form,
     formControl,
     addItems,
     deleteItem,
   } = useContext(usersContext);
+
   const [details, setDetails] = useState({
     name: "",
     email: "",
@@ -31,11 +33,6 @@ const BackDashBoard = () => {
   };
 
   const submitData = (e) => {
-    // ==== need to add condition for inCorrect data/form =====
-    // if(!errorMessage){
-    //   // setForm(true)
-    //   console.log("error")
-    // }else{
     e.preventDefault();
     addItems(details);
     setDetails({ name: "", email: "", gender: "", status: "" });
@@ -51,25 +48,12 @@ const BackDashBoard = () => {
   const handleDeleteItem = (id) => {
     console.log(id);
     deleteItem(id);
-    // fetch(`/deleteuser/${id}`, {
-    //   method: "DELETE",
-    // })
-    //   .then((response) => response.json())
-    //   .then((data) => {
-    //     console.log("User deleted:", data);
-    //     const updatedItems = items.filter((eachItem) => eachItem.id !== id);
-    //     setItems(updatedItems);
-    //     setFilteredItems(updatedItems);
-    //   })
-    //   .catch((error) => {
-    //     console.error("Error deleting item:", error);
-    //   });
   };
 
   return (
     <div className="h-full flex flex-col justify-center items-center">
       <div className="text-center  w-full p-8">
-        <h1 className="font-extrabold text-5xl">Log Details here :)</h1>
+        <h1 className="text-5xl">Log Details here :)</h1>
         <div className="flex items-center justify-center mt-9">
           <div className="relative flex items-center">
             <input
@@ -84,13 +68,19 @@ const BackDashBoard = () => {
       </div>
 
       {form && (
-        <div className="fixed z-50 inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
-          <div className="bg-amber-100 p-8 rounded-md w-[400px]">
-            <h1 className="ml-3 font-bold text-md mb-4 flex justify-between">
+        <div
+          className="fixed z-50 inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center"
+          onClick={() => formControl(form)}
+        >
+          <div
+            className="bg-amber-100 p-8 rounded-md w-[400px]"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h1 className="ml-3 text-md mb-4 flex justify-between">
               Fill the Requested Details to Log:
               <span>
-                <ImCross
-                  className=" cursor-pointer"
+                <RxCross2
+                  className=" text-black p-1 text-2xl cursor-pointer"
                   onClick={() => formControl(false)}
                 />
               </span>
@@ -114,18 +104,6 @@ const BackDashBoard = () => {
                 placeholder="Email"
                 required
               />
-              {/* <p className=" text-red-600">
-                {errorMessage ? "This email already taken" : ""}
-              </p> */}
-              {/* <input
-                className="m-3 p-3 rounded-md"
-                type="text"
-                name="gender"
-                onChange={handleChange}
-                value={details.gender}
-                placeholder="Gender"
-                required
-              /> */}
               <select
                 className="m-3 p-3 rounded-md"
                 onChange={handleChange}
@@ -133,7 +111,7 @@ const BackDashBoard = () => {
                 required
               >
                 <option value="" disabled selected>
-                  select
+                  Gender
                 </option>
                 <option value="male" selected={details.gender === "male"}>
                   male
@@ -150,7 +128,7 @@ const BackDashBoard = () => {
                 required
               >
                 <option value="" disabled selected>
-                  select
+                  Status
                 </option>
                 <option value="active" selected={details.status === "active"}>
                   active
@@ -162,17 +140,8 @@ const BackDashBoard = () => {
                   inactive
                 </option>
               </select>
-              {/* <input
-                className="m-3 p-3 rounded-md"
-                type="text"
-                name="status"
-                onChange={handleChange}
-                value={details.status}
-                placeholder="Status"
-                required
-              /> */}
               <button
-                className="bg-yellow-500 rounded-md py-2 text-lg text-white hover:bg-orange-400 duration-300 mt-4"
+                className="bg-yellow-500 mx-3 rounded-md py-2 text-lg text-white hover:bg-orange-400 duration-300 mt-4"
                 type="submit"
               >
                 Add
@@ -184,6 +153,7 @@ const BackDashBoard = () => {
       <ToastContainer />
       {filteredItems.length !== 0 ? (
         <CardList
+          manualItems={manualFilter}
           items={filteredItems}
           onDelete={handleDeleteItem}
           openForm={formControl}

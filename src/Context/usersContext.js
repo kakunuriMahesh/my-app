@@ -6,9 +6,8 @@ export const usersContext = createContext();
 export const UsersContextProvider = ({ children }) => {
   const [items, setItems] = useState([]);
   const [filteredItems, setFilteredItems] = useState([]);
+  const [manualFilter, setManualFilter] = useState([]);
   const [form, setForm] = useState(false);
-
-
 
   useEffect(() => {
     fetch("http://localhost:5000")
@@ -21,20 +20,21 @@ export const UsersContextProvider = ({ children }) => {
       .then((data) => {
         setItems(data);
         setFilteredItems(data);
+        setManualFilter(data);
       })
       .catch((error) => {
         console.error("Error in fetching data:", error);
       });
   }, []);
 
-  const formControl = ()=>{
-    setForm(!form)
-  }
+  const formControl = () => {
+    setForm(!form);
+  };
 
   // add
   const addItems = (newItem) => {
     console.log(newItem);
-    
+
     fetch("http://localhost:5000/adduser", {
       method: "POST",
       headers: {
@@ -56,11 +56,12 @@ export const UsersContextProvider = ({ children }) => {
         }
       })
       .then((data) => {
-        console.log([...data]);
-
-        const updatedItems = [...items, { ...data }];
+        console.log([data]);
+        const updatedItems = [{ ...data }, ...items];
+        console.log(updatedItems);
         setItems(updatedItems);
         setFilteredItems(updatedItems);
+        setManualFilter(updatedItems);
       })
       .catch((error) => {
         console.log(error);
@@ -85,11 +86,14 @@ export const UsersContextProvider = ({ children }) => {
         const updatedItems = items.filter((eachItem) => eachItem.id !== id);
         setItems(updatedItems);
         setFilteredItems(updatedItems);
+        setManualFilter(updatedItems);
       })
       .catch((error) => {
         console.error("Error deleting item:", error);
       });
   };
+
+  // view
 
   // filter
   const filterItems = (searchInput) => {
@@ -100,14 +104,28 @@ export const UsersContextProvider = ({ children }) => {
     setFilteredItems(filtered);
   };
 
+  const appliedFilter = (initialFilters) => {
+    console.log(initialFilters);
+    const appliedFilterData = items.filter((each) =>
+      Object.keys(initialFilters).every(
+        (key) => each[key] === initialFilters[key]
+      )
+    );
+    console.log(appliedFilterData);
+    setManualFilter(appliedFilterData);
+    setFilteredItems(appliedFilterData);
+  };
+
   return (
     <usersContext.Provider
       value={{
         items,
         filteredItems,
+        manualFilter,
         form,
         formControl,
         filterItems,
+        appliedFilter,
         addItems,
         deleteItem,
       }}
